@@ -4,19 +4,22 @@ function history(coin1, coin2) {
     alert('History graphs coming soon', coin1, coin2);
 }
 
-
-
-alert("Needs to be run locally.");
+'alert("Needs to be run locally.");
 
 let checkedMarkets = {
         showAll: true,
         bittrex: true,
+        cryptopia: true,
+        bleutrade: true,
         poloniex: true
-
     },
     checkedCoins = {
         showAll: false,
-        // TIC: false,
+        BTG: false,
+        BTM: false,
+        QTUM: false,
+        BTS: false,
+        XVC: false,
         // PLC: false
     };
 
