@@ -204,7 +204,17 @@ $(window).load(function () {
             return false;
         }
     }
-
+    
+    function getMarketLink(marketName, coinName) {
+        switch(marketName.toLowerCase()) {
+          case "bittrex": return "https://bittrex.com/Market/Index?MarketName=BTC-" + coinName;
+          case "poloniex": return "https://poloniex.com/exchange#btc_" + coinName.toLowerCase();
+          case "cryptopia": return "https://www.cryptopia.co.nz/Exchange/?market=" + coinName + "_BTC";
+          case "bleutrade": return "https://bleutrade.com/exchange/" + coinName + "/BTC";
+          default: return "www.d.com";
+        }
+    }
+    
     useData = function () {
         console.log(data);
         let topN = $('.loadNumberInput').val();
@@ -239,6 +249,8 @@ $(window).load(function () {
                         market2: market2,
                         market1price: (data[i].market1.last * 1000).toPrecision(3),
                         market1: market1,
+                        market2link: getMarketLink(data[pairIndex].market2.name, data[i].coin),
+                        market1link: getMarketLink(data[pairIndex].market1.name, data[i].coin),
                         pair: {
                             coin: data[pairIndex].coin,
                             diff: ((data[pairIndex].spread - 1) * 100).toFixed(3),
@@ -246,6 +258,8 @@ $(window).load(function () {
                             market2: data[pairIndex].market2.name,
                             market1price: (data[pairIndex].market1.last * 1000).toPrecision(3),
                             market1: data[pairIndex].market1.name,
+                            market2link: getMarketLink(data[pairIndex].market2.name, data[pairIndex].coin),
+                            market1link: getMarketLink(data[pairIndex].market1.name, data[pairIndex].coin),
                         },
                         totalDiff: (((data[i].spread - 1) * 100) + ((data[pairIndex].spread - 1) * 100)).toFixed(2)
                     };
