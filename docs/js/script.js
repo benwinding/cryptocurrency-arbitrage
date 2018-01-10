@@ -28,37 +28,30 @@ let addOne = true;
 function addRemoveAll(coinsOrMarkets) {
   
   if (coinsOrMarkets === 'markets') {
-    
     for (let market in checkedMarkets) {
       checkedMarkets[market] = !checkedMarkets.showAll;
       console.log(checkedMarkets[market]);
       addOne = false;
       addRemoveMarket(market);
       addOne = true;
-      
     }
     useData();
   }
-  
   if (coinsOrMarkets === 'coins') {
-    
     for (let coin in checkedCoins) {
       checkedCoins[coin] = !checkedCoins.showAll;
       console.log(checkedCoins[coin]);
       addOne = false;
-      addRemoveCoin(coin)
+      addRemoveCoin(coin);
       addOne = true;
-      
     }
     useData();
   }
-  
 }
 
-
 function addRemoveCoin(coin) {
-  if (addOne) checkedCoins[coin] = !checkedCoins[coin];
-  
+  if (addOne)
+    checkedCoins[coin] = !checkedCoins[coin];
   if (checkedCoins[coin]) {
     $('#check-' + coin).addClass('fa-check-square-o');
     $('#check-' + coin).removeClass('fa-square-o');
@@ -67,14 +60,16 @@ function addRemoveCoin(coin) {
     $('#check-' + coin).removeClass('fa-check-square-o');
     $('#check-' + coin).addClass('fa-square-o');
   }
-  
-  if (addOne) useData();
+  if (addOne)
+    useData();
 }
 
 function addRemoveMarket(market) {
-  console.log("Trying to add/remove market")
-  if (addOne){ console.log("If add one"); checkedMarkets[market] = !checkedMarkets[market] };
-  
+  console.log("Trying to add/remove market");
+  if (addOne){
+    console.log("If add one");
+    checkedMarkets[market] = !checkedMarkets[market]
+  }
   if (checkedMarkets[market]) {
     console.log("If add one");
     $('#check-' + market).addClass('fa-check-square-o');
