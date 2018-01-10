@@ -26,7 +26,6 @@ let checkedMarkets = {
 let addOne = true;
 
 function addRemoveAll(coinsOrMarkets) {
-  
   if (coinsOrMarkets === 'markets') {
     for (let market in checkedMarkets) {
       checkedMarkets[market] = !checkedMarkets.showAll;
@@ -87,7 +86,8 @@ function remove(item, highOrLow) {
   let li = $(item).closest('li');
   let coin = li.attr("data-coin");
   let market = li.attr("data-market1");
-  if (!Array.isArray(checkedCoins[coin])) checkedCoins[coin]= [];
+  if (!Array.isArray(checkedCoins[coin]))
+    checkedCoins[coin]= [];
   checkedCoins[coin].push(market);
   console.log("Removing item...", checkedCoins[coin]);
   useData();
@@ -99,7 +99,8 @@ function searchMarketsOrCoins(marketOrCoin, input) {
   
   if (input === "") {
     listItems.show();
-  } else {
+  }
+  else {
     listItems.each(function () {
       let text = $(this).text().toUpperCase();
       (text.indexOf(input) >= 0) ? $(this).show() : $(this).hide();
@@ -145,7 +146,8 @@ $(window).load(function () {
           }
         }
         coinList.append(coinTemplate(context));
-        if (checkedCoins[coin] === undefined) checkedCoins[coin] = true;
+        if (checkedCoins[coin] === undefined)
+          checkedCoins[coin] = true;
         else {
           $('#check-' + coin).removeClass('fa-check-square-o');
           $('#check-' + coin).addClass('fa-square-o');
@@ -173,25 +175,16 @@ $(window).load(function () {
     let value = $(this).val();
     searchMarketsOrCoins("market", value)
   });
-  
   $('.loadNumberInput').change(function () {
     useData();
   });
   function allowedData(lowMarket, highMarket, coinName) {
-    if(checkedMarkets[lowMarket] && checkedMarkets[highMarket] && checkedCoins[coinName]){
-      if(Array.isArray(checkedCoins[coinName])) {
-        if(!checkedCoins[coinName].includes(lowMarket) && !checkedCoins[coinName].includes(highMarket)) {
-          return true;
-        }
-        else return false;
-      }
-      else{
-        return true;
-      }
-    }
-    else {
+    if(!checkedMarkets[lowMarket] && !checkedMarkets[highMarket] && !checkedCoins[coinName])
       return false;
-    }
+    if(!Array.isArray(checkedCoins[coinName]))
+      return true;
+    if(!checkedCoins[coinName].includes(lowMarket) && !checkedCoins[coinName].includes(highMarket))
+      return true;
   }
   
   function getMarketLink(marketName, coinName) {
