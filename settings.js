@@ -73,7 +73,10 @@ let markets = [
             if (obj["MarketName"].includes('BTC-')) {
               let coinName = obj["MarketName"].replace("BTC-", '');
               if (!coin_prices[coinName]) coin_prices[coinName] = {};
-              coin_prices[coinName].bittrex = obj.Last;
+              coin_prices[coinName].bittrex = {
+                price: obj.Last,
+                volume: obj.BaseVolume
+              }
             }
           }
           res(coin_prices);
@@ -88,59 +91,6 @@ let markets = [
   },
   
   {
-    marketName: 'btc38',
-    URL: 'http://api.btc38.com/v1/ticker.php?c=all&mk_type=cny',
-    toBTCURL: false,
-    pairURL: '',
-    last: function(data, coin_prices, toBTCURL) { //Where to find the last price of coin in JSON data
-      return new Promise(function(res, rej) {
-        let priceOfBTC = data.btc.ticker.last;
-        try {
-          for (let key in data) {
-            let coinName = key.toUpperCase();
-            let price = data[key]['ticker'].last;
-            if (!coin_prices[coinName]) coin_prices[coinName] = {};
-            
-            coin_prices[coinName]["btc38"] = data[key]['ticker'].last / priceOfBTC;
-          }
-          res(coin_prices);
-        } catch (err) {
-          console.log(err);
-          rej(err)
-        }
-      })
-    }
-  },
-  
-  {
-    marketName: 'jubi',
-    URL: 'https://www.jubi.com/api/v1/allticker/', //URL To Fetch API From.
-    toBTCURL: false, //URL, if needed for an external bitcoin price api.
-    pairURL: '',
-    last: function(data, coin_prices, toBTCURL) { //Where to find the last price of coin in JSON data
-      return new Promise(function(res, rej) {
-        let priceOfBTC = data.btc.last;
-        console.log(priceOfBTC);
-        try {
-          for (let key in data) {
-            let coinName = key.toUpperCase();
-            let price = data[key].last;
-            if (!coin_prices[coinName]) coin_prices[coinName] = {};
-            
-            coin_prices[coinName]["jubi"] = data[key].last / priceOfBTC;
-          }
-          res(coin_prices);
-        } catch (err) {
-          console.log(err);
-          rej(err)
-        }
-      })
-    }
-    
-  },
-  
-  
-  {
     marketName: 'poloniex',
     URL: 'https://poloniex.com/public?command=returnTicker',
     toBTCURL: false,
@@ -152,7 +102,10 @@ let markets = [
             if (obj.includes('BTC_') && obj !== "BTC_EMC2") {
               let coinName = obj.replace("BTC_", '');
               if (!coin_prices[coinName]) coin_prices[coinName] = {};
-              coin_prices[coinName].poloniex = data[obj].last;
+              coin_prices[coinName].poloniex = {
+                price: data[obj].last,
+                volume: data[obj].baseVolume
+              }
             }
           }
           res(coin_prices);
@@ -178,7 +131,10 @@ let markets = [
             if (obj["Label"].includes('/BTC')) {
               let coinName = obj["Label"].replace("/BTC", '');
               if (!coin_prices[coinName]) coin_prices[coinName] = {};
-              coin_prices[coinName].cryptopia = obj.LastPrice;
+              coin_prices[coinName].cryptopia = {
+                price: obj.LastPrice,
+                volume: obj.BaseVolume
+              }
             }
           }
           res(coin_prices);
@@ -204,7 +160,10 @@ let markets = [
             if (obj["MarketName"].includes('_BTC')) {
               let coinName = obj["MarketName"].replace("_BTC", '');
               if (!coin_prices[coinName]) coin_prices[coinName] = {};
-              coin_prices[coinName].bleutrade = obj.Last;
+              coin_prices[coinName].bleutrade = {
+                price: obj.Last,
+                volume: obj.BaseVolume
+              }
             }
           }
           res(coin_prices);
@@ -239,8 +198,11 @@ let markets = [
             }
             
             if (!coin_prices[coinName]) coin_prices[coinName] = {};
-            
-            coin_prices[coinName].kraken = data.result[name].c[0];
+            let coinPair = data.result[name];
+            coin_prices[coinName].kraken = {
+              price: coinPair.c[0],
+              volume: coinPair.v[1] * coinPair.c[0]
+            };
             
           }
           res(coin_prices);

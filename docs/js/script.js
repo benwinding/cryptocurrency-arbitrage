@@ -251,6 +251,8 @@ $(window).load(function () {
                         market1: market1,
                         market2link: getMarketLink(data[pairIndex].market2.name, data[i].coin),
                         market1link: getMarketLink(data[pairIndex].market1.name, data[i].coin),
+                        market2volume: data[pairIndex].market2.volume,
+                        market1volume: data[pairIndex].market1.volume,
                         pair: {
                             coin: data[pairIndex].coin,
                             diff: ((data[pairIndex].spread - 1) * 100).toFixed(3),
@@ -260,6 +262,8 @@ $(window).load(function () {
                             market1: data[pairIndex].market1.name,
                             market2link: getMarketLink(data[pairIndex].market2.name, data[pairIndex].coin),
                             market1link: getMarketLink(data[pairIndex].market1.name, data[pairIndex].coin),
+                            market2volume: data[pairIndex].market2.volume,
+                            market1volume: data[pairIndex].market1.volume,
                         },
                         totalDiff: (((data[i].spread - 1) * 100) + ((data[pairIndex].spread - 1) * 100)).toFixed(2)
                     };
