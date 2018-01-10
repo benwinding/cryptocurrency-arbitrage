@@ -250,8 +250,8 @@
                 <a href="{{market1link}}" target=_blank>{{market2}}</a>: {{market2price}}<span class="mBTC">mBTC</span>
             </p>
             <p class="coin-markets">
-                {{market1}}: {{market1volume}}<span class="mBTC">VOL</span><i class="fa fa-long-arrow-right"></i>
-                {{market2}}: {{market2volume}}<span class="mBTC">VOL</span>
+                Volume: {{market2volume}}<span class="mBTC">BTC</span><i class="fa fa-long-arrow-right"></i>
+                Volume: {{market1volume}}<span class="mBTC">BTC</span>
             </p>
         </div>
         <a href="javascript:history('{{coin}}');">Show history</a> <a class="remove" href="#!" onclick="remove(this, 'high')">
@@ -272,8 +272,8 @@
                     class="mBTC">mBTC</span>
             </p>
             <p class="coin-markets">
-                {{pair.market1}}: {{pair.market1volume}}<span class="mBTC">VOL</span><i class="fa fa-long-arrow-right"></i>
-                {{pair.market2}}: {{pair.market2volume}}<span class="mBTC">VOL</span>
+                Volume: {{pair.market1volume}}<span class="mBTC">BTC</span><i class="fa fa-long-arrow-right"></i>
+                Volume: {{pair.market2volume}}<span class="mBTC">BTC</span>
             </p>
         </div>
         <a href="javascript:history({{pair.coin}}');">Show history</a> <a class="remove" href="#!" onclick="remove(this, 'low')">Remove
@@ -299,8 +299,8 @@
                     <a href="{{market1link}}" target=_blank>{{market2}}</a>: {{market2price}}
                 </p>
                 <p class="coin-markets">
-                    {{market1}}: {{market1volume}}<span class="mBTC">VOL</span><i class="fa fa-long-arrow-right"></i>
-                    {{market2}}: {{market2volume}}<span class="mBTC">VOL</span>
+                    Volume: {{market2volume}}<span class="mBTC">BTC</span><i class="fa fa-long-arrow-right"></i>
+                    Volume: {{market1volume}}<span class="mBTC">BTC</span>
                 </p>
             </div>
         </div>
@@ -318,12 +318,11 @@
                     <a href="{{pair.market2link}}" target=_blank>{{pair.market2}}</a>: {{pair.market2price}}
                 </p>
                 <p class="coin-markets">
-                    {{pair.market1}}: {{pair.market1volume}}<span class="mBTC">VOL</span><i class="fa fa-long-arrow-right"></i>
-                    {{pair.market2}}: {{pair.market2volume}}<span class="mBTC">VOL</span>
+                    Volume: {{pair.market1volume}}<span class="mBTC">BTC</span><i class="fa fa-long-arrow-right"></i>
+                    Volume: {{pair.market2volume}}<span class="mBTC">BTC</span>
                 </p>
             </div>
         </div>
-
     </div>
     <a href="javascript:history('{{coin}}', '{{pair.coin}}');">Show history</a>
 </script>
