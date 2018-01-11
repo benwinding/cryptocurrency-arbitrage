@@ -128,13 +128,15 @@ let markets = [
       return new Promise(function(res, rej) {
         try {
           for (let obj of data.Data) {
-            if (obj["Label"].includes('/BTC')) {
-              let coinName = obj["Label"].replace("/BTC", '');
-              if (!coin_prices[coinName]) coin_prices[coinName] = {};
-              coin_prices[coinName].cryptopia = {
-                price: obj.LastPrice,
-                volume: obj.BaseVolume
-              }
+            if (!obj["Label"].includes('/BTC'))
+              continue;
+            let coinName = obj["Label"].replace("/BTC", '');
+            if (coinName === "BTG") // Bit Coin Gold has a different ticker now
+              continue;
+            if (!coin_prices[coinName]) coin_prices[coinName] = {};
+            coin_prices[coinName].cryptopia = {
+              price: obj.LastPrice,
+              volume: obj.BaseVolume
             }
           }
           res(coin_prices);
