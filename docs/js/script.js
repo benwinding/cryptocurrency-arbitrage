@@ -211,12 +211,13 @@ $(window).load(function () {
       let pairIndex = 0;
       let coinName = data[i].coin;
 
-      if (!allowedData(market2, market1, coinName) && data.length - topN > 0) {
+      if (!allowedData(market2, market1, coinName)
+        && dataLen - topN > 0) {
         topN++;
         highestN++;
         return;
       }
-      for (let j = data.length - 1; j >= 0; j--) {
+      for (let j = dataLen - 1; j >= 0; j--) {
         if (
           data[j].market1.name === market2 //equal ...
           && data[j].market2.name === market1 // to opposite market
