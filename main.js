@@ -7,15 +7,16 @@
 
 console.log('Starting app...');
 
-const request = require('request'), Promise = require("bluebird"); //request for pulling JSON from api. Bluebird for Promises.
-const express = require('express'),
-  app = express(),
-  helmet = require('helmet'),
-  http = require('http').Server(app),
-  io = require('socket.io')(http); // For websocket server functionality
+const request = require('request');
+const Promise = require("bluebird"); //request for pulling JSON from api. Bluebird for Promises.
+const express = require('express');
+const app = express();
+const helmet = require('helmet');
+const http = require('http').Server(app);
+const io = require('socket.io')(http); // For websocket server functionality
 app.use(helmet.hidePoweredBy({setTo: 'PHP/5.4.0'}));
-const port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/docs'));
+const port = process.env.PORT || 3000;
 
 http.listen(port, function () {
   console.log('listening on', port);
@@ -40,15 +41,15 @@ function getMarketData(options, coin_prices, callback) {   //GET JSON DATA
       try {
         let data = JSON.parse(body);
         console.log("Success", options.marketName);
-        if (options.marketName) {
-          let newCoinPrices = options.last(data, coin_prices, options.toBTCURL);
-          numberOfRequests++;
-          if (numberOfRequests >= 1) computePrices(coin_prices);
-          resolve(newCoinPrices);
-        }
-        else {
+        if (!options.marketName) {
           resolve(data);
+          return;
         }
+        let newCoinPrices = options.last(data, coin_prices, options.toBTCURL);
+        numberOfRequests++;
+        if (numberOfRequests >= 1)
+          computePrices(coin_prices);
+        resolve(newCoinPrices);
       } catch (error) {
         console.log("Error getting JSON response from", options.URL, error); //Throws error
         reject(error);
@@ -62,77 +63,78 @@ async function computePrices(data) {
   
   function loopData() {
     return new Promise(function (resolve, reject) {
-      if (numberOfRequests >= 2) {
-        for (let coin in data) {
-          if (Object.keys(data[coin]).length > 1) {
-            if (coinNames.includes(coin) == false) coinNames.push(coin);
-            let arr = [];
-            for (let market in data[coin]) {
-              arr.push([data[coin][market], market]);
-            }
-            arr.sort(function (a, b) {
-              return a[0] - b[0];
-            });
-            for (let i = 0; i < arr.length; i++) {
-              for (let j = i + 1; j < arr.length; j++) {
-                let coinAname = arr[i][1];
-                let coinAdata = arr[i][0];
-                let coinBname = arr[j][1];
-                let coinBdata = arr[j][0];
-                results.push(
-                  {
-                    coin: coin,
-                    spread: coinAdata.price / coinBdata.price,
-                    market2: {
-                      name: coinAname,
-                      last: coinAdata.price,
-                      volume: coinAdata.volume
-                    },
-                    market1: {
-                      name: coinBname,
-                      last: coinBdata.price,
-                      volume: coinBdata.volume
-                    }
-                  },
-                  {//TODO, shouldnt have to create duplicate object for same markets
-                    coin: coin,
-                    spread: coinBdata.price / coinAdata.price,
-                    market2: {
-                      name: coinBname,
-                      last: coinBdata.price,
-                      volume: coinBdata.volume
-                    },
-                    market1: {
-                      name: coinAname,
-                      last: coinAdata.price,
-                      volume: coinAdata.volume
-                    }
-                  }
-                );
-                
-                // db.insert({
-                //     coin: coin,
-                //     lastSpread: coinAdata / coinBdata,
-                //     market1: {
-                //         name: coinAname,
-                //         last: coinAdata
-                //     },
-                //     market2: {
-                //         name: coinBname,
-                //         last: coinBdata
-                //     }
-                // })
-                
+      if (numberOfRequests < 2)
+        return;
+      for (let coin in data) {
+        if (Object.keys(data[coin]).length <= 1)
+          continue;
+        if (coinNames.includes(coin) == false)
+          coinNames.push(coin);
+        let arr = [];
+        for (let market in data[coin]) {
+          arr.push([data[coin][market], market]);
+        }
+        arr.sort(function (a, b) {
+          return a[0] - b[0];
+        });
+        // Iterate through all exchanges the current coin
+        for (let i = 0; i < arr.length; i++) {
+          for (let j = i + 1; j < arr.length; j++) {
+            let coinAname = arr[i][1];
+            let coinAdata = arr[i][0];
+            let coinBname = arr[j][1];
+            let coinBdata = arr[j][0];
+            results.push(
+              {
+                coin: coin,
+                spread: coinAdata.price / coinBdata.price,
+                market2: {
+                  name: coinAname,
+                  last: coinAdata.price,
+                  volume: coinAdata.volume
+                },
+                market1: {
+                  name: coinBname,
+                  last: coinBdata.price,
+                  volume: coinBdata.volume
+                }
+              },
+              {//TODO, shouldnt have to create duplicate object for same markets
+                coin: coin,
+                spread: coinBdata.price / coinAdata.price,
+                market2: {
+                  name: coinBname,
+                  last: coinBdata.price,
+                  volume: coinBdata.volume
+                },
+                market1: {
+                  name: coinAname,
+                  last: coinAdata.price,
+                  volume: coinAdata.volume
+                }
               }
-            }
+            );
+            
+            // db.insert({
+            //     coin: coin,
+            //     lastSpread: coinAdata / coinBdata,
+            //     market1: {
+            //         name: coinAname,
+            //         last: coinAdata
+            //     },
+            //     market2: {
+            //         name: coinBname,
+            //         last: coinBdata
+            //     }
+            // })
           }
         }
-        results.sort(function (a, b) {
-          return a.spread - b.spread;
-        });
-        console.log('Finishing function...');
-        resolve();
       }
+      results.sort(function (a, b) {
+        return a.spread - b.spread;
+      });
+      console.log('Finishing function...');
+      resolve();
     })
   }
   await loopData();
