@@ -88,30 +88,15 @@ async function computePrices(data) {
               {
                 coin: coin,
                 spread: coinAdata.price / coinBdata.price,
-                market2: {
+                markets: [{
                   name: coinAname,
                   last: coinAdata.price,
                   volume: coinAdata.volume
-                },
-                market1: {
+                },{
                   name: coinBname,
                   last: coinBdata.price,
                   volume: coinBdata.volume
-                }
-              },
-              {//TODO, shouldnt have to create duplicate object for same markets
-                coin: coin,
-                spread: coinBdata.price / coinAdata.price,
-                market2: {
-                  name: coinBname,
-                  last: coinBdata.price,
-                  volume: coinBdata.volume
-                },
-                market1: {
-                  name: coinAname,
-                  last: coinAdata.price,
-                  volume: coinAdata.volume
-                }
+                }]
               }
             );
             

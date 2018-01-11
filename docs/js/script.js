@@ -10,8 +10,8 @@ let checkedMarkets = {
     cryptopia: true,
     bleutrade: true,
     poloniex: true
-  },
-  checkedCoins = {
+  };
+let checkedCoins = {
     showAll: false,
     BTG: false,
     BTM: false,
@@ -19,7 +19,7 @@ let checkedMarkets = {
     BTS: false,
     XVC: false,
     // PLC: false
-  };
+};
 
 let addOne = true;
 
@@ -206,8 +206,8 @@ $(window).load(function () {
     let dataLen = data.length;
     highest.empty();  //Remove any previous data (LI) from UL
     for (let i = dataLen - initN; i >= dataLen - topN; i--) { //Loop through top 10
-      let market1 = data[i].market1.name;
-      let market2 = data[i].market2.name;
+      let market1 = data[i].markets[0].name;
+      let market2 = data[i].markets[1].name;
       let pairIndex = 0;
       let coinName = data[i].coin;
 
@@ -219,8 +219,8 @@ $(window).load(function () {
       }
       for (let j = dataLen - 1; j >= 0; j--) {
         if (
-          data[j].market1.name === market2 //equal ...
-          && data[j].market2.name === market1 // to opposite market
+          data[j].markets[0].name === market2 //equal ...
+          && data[j].markets[1].name === market1 // to opposite market
           && data[i].coin !== data[j].coin //and isnt the same coin as pair
           && data[j].coin !== 'BTC' //and isnt BTC
           && checkedCoins[data[j].coin] //and isnt remove
@@ -233,28 +233,34 @@ $(window).load(function () {
       }
       if (pairIndex < 0)
         continue;
+      let marketP = data[pairIndex];
+      let marketi = data[i];
+      let marketi0 = marketi.markets[0];
+      let marketi1 = marketi.markets[1];
+      let marketP0 = marketP.markets[0];
+      let marketP1 = marketP.markets[1];
       let context = { //All required data
-        coin: data[i].coin,
-        diff: ((data[i].spread - 1) * 100).toFixed(3),
-        market2price: (data[i].market2.last * 1000).toPrecision(3),
+        coin: marketi.coin,
+        diff: ((marketi.spread - 1) * 100).toFixed(3),
+        market2price: (marketi1.last * 1000).toPrecision(3),
         market2: market2,
-        market1price: (data[i].market1.last * 1000).toPrecision(3),
+        market1price: (marketi0.last * 1000).toPrecision(3),
         market1: market1,
-        market2link: getMarketLink(data[pairIndex].market2.name, data[i].coin),
-        market1link: getMarketLink(data[pairIndex].market1.name, data[i].coin),
-        market2volume: (data[pairIndex].market2.volume * 1.0).toFixed(1),
-        market1volume: (data[pairIndex].market1.volume * 1.0).toFixed(1),
+        market2link: getMarketLink(marketP1.name, data[i].coin),
+        market1link: getMarketLink(marketP0.name, data[i].coin),
+        market2volume: (marketP1.volume * 1.0).toFixed(1),
+        market1volume: (marketP0.volume * 1.0).toFixed(1),
         pair: {
           coin: data[pairIndex].coin,
-          diff: ((data[pairIndex].spread - 1) * 100).toFixed(3),
-          market2price: (data[pairIndex].market2.last * 1000).toFixed(3),
-          market2: data[pairIndex].market2.name,
-          market1price: (data[pairIndex].market1.last * 1000).toFixed(3),
-          market1: data[pairIndex].market1.name,
-          market2link: getMarketLink(data[pairIndex].market2.name, data[pairIndex].coin),
-          market1link: getMarketLink(data[pairIndex].market1.name, data[pairIndex].coin),
-          market2volume: (data[pairIndex].market2.volume * 1.0).toFixed(1),
-          market1volume: (data[pairIndex].market1.volume * 1.0).toFixed(1),
+          diff: ((marketP.spread - 1) * 100).toFixed(3),
+          market2price: (marketP1.last * 1000).toFixed(3),
+          market2: marketP1.name,
+          market1price: (marketP0.last * 1000).toFixed(3),
+          market1: marketP0.name,
+          market2link: getMarketLink(marketP1.name, data[pairIndex].coin),
+          market1link: getMarketLink(marketP0.name, data[pairIndex].coin),
+          market2volume: (marketP1.volume * 1.0).toFixed(1),
+          market1volume: (marketP0.volume * 1.0).toFixed(1),
         },
         totalDiff: (((data[i].spread - 1) * 100) + ((data[pairIndex].spread - 1) * 100)).toFixed(2)
       };
