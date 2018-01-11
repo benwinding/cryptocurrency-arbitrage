@@ -22,6 +22,7 @@ let checkedCoins = {
 };
 
 let addOne = true;
+let getCheck = function(coinOrMarket){ return $('#check-' + coinOrMarket); } //Highest UL
 
 function addRemoveAll(coinsOrMarkets) {
   if (coinsOrMarkets === 'markets') {
@@ -154,7 +155,6 @@ $(window).load(function () {
     numberOfMLoads++;
   });
   
-  let getCheck = function(coinOrMarket){ return $('#highest' + coinOrMarket); } //Highest UL
   let highest = $('#highest'); //Highest UL
   let highSource = $("#high-template").html(); //Template source
   let highTemplate = Handlebars.compile(highSource); //Template
